@@ -1,7 +1,10 @@
 package com.admin.scnadmin.controller;
 
-import com.admin.scnadmin.model.Course;
-import com.admin.scnadmin.service.CourseService;
+import com.admin.scnadmin.model.CommentConsult;
+import com.admin.scnadmin.model.ConsultAppointment;
+import com.admin.scnadmin.model.Professor;
+import com.admin.scnadmin.service.CommentConsultService;
+import com.admin.scnadmin.service.CommentService;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,30 +16,41 @@ import java.util.List;
 
 @CrossOrigin(origins= "*")
 @RestController//change in case you want to test the monolithic app
-@RequestMapping(path="/api/course")
-public class CourseController {
+@RequestMapping(path="/api/appointmentComment")
+public class CommentConsultController {
 
     @Autowired
-    private CourseService courseService;
+    private CommentConsultService commentConsultService;
 
-    @GetMapping("/getAllCourse")
-    public List<Course> getAllCourse() {
+
+    @GetMapping("/getAllAppointmentComment")
+    public List<CommentConsult> getAllAppointmentComment() {
         try {
-            return courseService.getAllCourse();
+            return commentConsultService.getAllCommentConsult();
         } catch (SQLException ex) {
-            return (List<Course>) ResponseEntity
+            return (List<CommentConsult>) ResponseEntity
                     .badRequest()
                     .body("Error loading Course list");
         }
     }
 
-    @PostMapping("/saveCourse")
-    public ResponseEntity<?> saveCourse(@RequestBody Course course) {
+    @GetMapping("/getgetAllAppointmentCommentDetailById/{id}")
+    public ResponseEntity<CommentConsult> get(@PathVariable Integer id) {
+        try {
+            CommentConsult commentConsult = commentConsultService.getConsultCommentConsult(id);
+            return new ResponseEntity<>(commentConsult, HttpStatus.OK);
+        } catch (SQLException ex) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PostMapping("/saveAppointmentComment")
+    public ResponseEntity<?> saveAppointmentComment(@RequestBody CommentConsult commentConsult) {
 
         JSONObject response = new JSONObject();
 
         try {
-            boolean result = courseService.saveCourse(course);
+            boolean result = commentConsultService.saveCommentConsult(commentConsult);
             if (result) {
                 //emailService.sendEmail("pmarin2592@gmail.com","Prueba de sistema", "Prueba de sistema");
                 return new ResponseEntity<>("Ready", HttpStatus.OK);
@@ -51,14 +65,13 @@ public class CourseController {
         }
     }
 
-
-    @PostMapping("/deleteCourseById/{id}")
-    public ResponseEntity<?> deleteProfessorById(@PathVariable(value = "id") long id) {
+    @PostMapping("/deleteAppointmentCommentById/{id}")
+    public ResponseEntity<?> deleteAppointmentCommentById(@PathVariable(value = "id") long id) {
 
         JSONObject response = new JSONObject();
 
         try {
-            boolean result = courseService.deleteCourse(id);
+            boolean result = commentConsultService.deleteCommentConsult(id);
             if (result) {
                 //emailService.sendEmail("pmarin2592@gmail.com","Prueba de sistema", "Prueba de sistema");
                 return new ResponseEntity<>("Ready", HttpStatus.OK);
@@ -70,16 +83,6 @@ public class CourseController {
             return ResponseEntity
                     .badRequest()
                     .body("Error delete professor ");
-        }
-    }
-
-    @GetMapping("/getCourseDetailById/{id}")
-    public ResponseEntity<Course> get(@PathVariable Integer id) {
-        try {
-            Course course = courseService.getCourse(id);
-            return new ResponseEntity<>(course, HttpStatus.OK);
-        } catch (SQLException ex) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 }

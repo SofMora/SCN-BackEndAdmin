@@ -1,8 +1,8 @@
 package com.admin.scnadmin.controller;
 
-import com.admin.scnadmin.model.News;
 import com.admin.scnadmin.model.Professor;
-import com.admin.scnadmin.service.NewsService;
+import com.admin.scnadmin.model.TypeNews;
+import com.admin.scnadmin.service.TypeNewsService;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,30 +14,30 @@ import java.util.List;
 
 @CrossOrigin(origins= "*")
 @RestController//change in case you want to test the monolithic app
-@RequestMapping(path="/api/news")
-public class NewsController {
+@RequestMapping(path="/api/typeNews")
+public class TypesNewsController {
 
     @Autowired
-    private NewsService newsService;
+    private TypeNewsService typeNewsService;
 
-    @GetMapping("/getAllNews")
-    public List<News> getAllNews() {
+    @GetMapping("/getAllTypeNews")
+    public List<TypeNews> getAllTypeNews() {
         try {
-            return newsService.getAllPNews();
+            return typeNewsService.getAllTypeNews();
         } catch (SQLException ex) {
-            return (List<News>) ResponseEntity
+            return (List<TypeNews>) ResponseEntity
                     .badRequest()
                     .body("Error loading professor list");
         }
     }
 
-    @PostMapping("/saveNews")
-    public ResponseEntity<?> saveNews(@RequestBody News news) {
+    @PostMapping("/saveTypeNews")
+    public ResponseEntity<?> saveTypeNews(@RequestBody TypeNews typeNews) {
 
         JSONObject response = new JSONObject();
 
         try {
-            boolean result = newsService.saveNew(news);
+            boolean result = typeNewsService.saveTypeNews(typeNews);
             if (result) {
                 //emailService.sendEmail("pmarin2592@gmail.com","Prueba de sistema", "Prueba de sistema");
                 return new ResponseEntity<>("Ready", HttpStatus.OK);
@@ -48,17 +48,18 @@ public class NewsController {
         } catch (Exception ex) {
             return ResponseEntity
                     .badRequest()
-                    .body("Error save New ");
+                    .body("Error save professor ");
         }
     }
 
-    @PostMapping("/deleteNewsById/{id}")
-    public ResponseEntity<?> deleteNewsById(@PathVariable(value = "id") long id) {
+
+    @PostMapping("/deleteTypeNewsById/{id}")
+    public ResponseEntity<?> deleteTypeNewsById(@PathVariable(value = "id") long id) {
 
         JSONObject response = new JSONObject();
 
         try {
-            boolean result = newsService.deleteNews(id);
+            boolean result = typeNewsService.deleteTypeNews(id);
             if (result) {
                 //emailService.sendEmail("pmarin2592@gmail.com","Prueba de sistema", "Prueba de sistema");
                 return new ResponseEntity<>("Ready", HttpStatus.OK);
@@ -69,17 +70,18 @@ public class NewsController {
         } catch (Exception ex) {
             return ResponseEntity
                     .badRequest()
-                    .body("Error delete News ");
+                    .body("Error delete professor ");
         }
     }
 
-    @GetMapping("/getNewsDetailById/{id}")
-    public ResponseEntity<News> get(@PathVariable Integer id) {
+    @GetMapping("/getTypeNewsDetailById/{id}")
+    public ResponseEntity<TypeNews> get(@PathVariable Integer id) {
         try {
-            News news = newsService.getNews(id);
-            return new ResponseEntity<>(news, HttpStatus.OK);
+            TypeNews typeNews = typeNewsService.getTypeNews(id);
+            return new ResponseEntity<>(typeNews, HttpStatus.OK);
         } catch (SQLException ex) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
 }
