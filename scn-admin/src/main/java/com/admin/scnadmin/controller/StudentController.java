@@ -5,6 +5,7 @@ import com.admin.scnadmin.dto.StudentDTO;
 import com.admin.scnadmin.model.Student;
 import com.admin.scnadmin.service.EmailService;
 import com.admin.scnadmin.service.StudentService;
+import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -53,11 +54,14 @@ public class StudentController {
         JSONObject response = new JSONObject();
 
         try {
-
-            boolean result = studentService.updateAprovalStudent(studentService.getStudent(id),true);
+            Student student = studentService.getStudent(id);
+            boolean result = studentService.updateAprovalStudent(student,true);
             if (result) {
-                //emailService.sendEmail("pmarin2592@gmail.com","Prueba de sistema", "Prueba de sistema");
-                return new ResponseEntity<>("Ready", HttpStatus.OK);
+                emailService.sendEmail(student.getEmail(),"Registro aprobado", "Estimado estudiante \n Se le informa" +
+                        "que su registro fue aprobado por el administrador.\n Saludos.");
+                response.put("message", "student approval successfully");
+                response.put("isSuccess", true);
+                return new ResponseEntity<String>(response.toString(), HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
@@ -66,6 +70,8 @@ public class StudentController {
             return ResponseEntity
                     .badRequest()
                     .body("Error approval student ");
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -76,10 +82,14 @@ public class StudentController {
         JSONObject response = new JSONObject();
 
         try {
-            boolean result = studentService.updateAprovalStudent(studentService.getStudent(id),false);
+            Student student = studentService.getStudent(id);
+            boolean result = studentService.updateAprovalStudent(student,false);
             if (result) {
-                emailService.sendEmail("pmarin2592@gmail.com","Prueba de sistema", "Prueba de sistema");
-                return new ResponseEntity<>("Ready", HttpStatus.OK);
+                emailService.sendEmail(student.getEmail(),"Registro denegado", "Estimado estudiante \n Se le informa" +
+                        "que su registro fue denegado por el administrador.\n Saludos.");
+                response.put("message", "student approval successfully");
+                response.put("isSuccess", true);
+                return new ResponseEntity<String>(response.toString(), HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }

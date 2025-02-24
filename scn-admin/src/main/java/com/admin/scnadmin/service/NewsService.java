@@ -1,17 +1,9 @@
 package com.admin.scnadmin.service;
 
 import com.admin.scnadmin.model.News;
-import com.admin.scnadmin.model.Professor;
 import com.admin.scnadmin.repository.admin.NewsRepository;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -47,9 +39,9 @@ public class NewsService {
         }
     }
 
-    public boolean updateNews(News news) {
+    public boolean updateNews(Long id, String title,String textNews, byte[] images) {
         try{
-            newsRepository.save(news);
+            newsRepository.updateNews(id,title,textNews,images);
             return true;
         }catch (Exception ex)
         {

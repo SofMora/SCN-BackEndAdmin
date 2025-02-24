@@ -60,31 +60,64 @@ public class NewsController {
     @PostMapping(path = "/saveNews", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> saveNews(@RequestBody NewsDTO newsDTO) {
         JSONObject response = new JSONObject();
+        News news = new News();
+        byte[] imageBytes = new byte[0];
+        if(newsDTO.getId() == 0)
+        {
+            try {
 
-        try {
-            News news = new News();
-            news.setTitle(newsDTO.getTitle());
-            news.setAuthor(Integer.parseInt(newsDTO.getAuthor()));
-            news.setTextNews(newsDTO.getTextNews());
-            news.setDateNews(newsDTO.getDateNews());
-            news.setTypeNews(Integer.parseInt(newsDTO.getTypeNews()));
+                news.setTitle(newsDTO.getTitle());
+                news.setAuthor(Integer.parseInt(newsDTO.getAuthor()));
+                news.setTextNews(newsDTO.getTextNews());
+                news.setDateNews(newsDTO.getDateNews());
+                news.setTypeNews(Integer.parseInt(newsDTO.getTypeNews()));
 
-            if(newsDTO.getImage() != null && !newsDTO.getImage().isEmpty()) {
-                byte[] imageBytes = Base64.getDecoder().decode(newsDTO.getImage().split(",")[1]);
-                news.setImages(imageBytes);
-            }
+                if(newsDTO.getImage() != null && !newsDTO.getImage().isEmpty()) {
+                    imageBytes = Base64.getDecoder().decode(newsDTO.getImage().split(",")[1]);
+                    news.setImages(imageBytes);
+                }
 
-            boolean result = newsService.saveNew(news);
-            if (result) {
-                response.put("message", "News added successfully");
-                response.put("isSuccess", true);
-                return ResponseEntity.ok(response.toString());
-            } else {
+                boolean result = newsService.saveNew(news);
+                if (result) {
+                    response.put("message", "News added successfully");
+                    response.put("isSuccess", true);
+                    return ResponseEntity.ok(response.toString());
+                } else {
+                    return ResponseEntity.badRequest().body("Error saving news");
+                }
+
+            } catch (Exception ex) {
                 return ResponseEntity.badRequest().body("Error saving news");
             }
 
-        } catch (Exception ex) {
-            return ResponseEntity.badRequest().body("Error saving news");
+        }else{
+            try {
+
+                if(newsDTO.getImage() != null && !newsDTO.getImage().isEmpty()) {
+                    imageBytes = Base64.getDecoder().decode(newsDTO.getImage().split(",")[1]);
+                    boolean result = newsService.updateNews(newsDTO.getId(),newsDTO.getTitle(),newsDTO.getTextNews(),imageBytes);
+                    if (result) {
+                        response.put("message", "Updated added successfully");
+                        response.put("isSuccess", true);
+                        return ResponseEntity.ok(response.toString());
+                    } else {
+                        return ResponseEntity.badRequest().body("Error Updated news");
+                    }
+                }else{
+                    //imageBytes = Base64.getDecoder().decode(newsDTO.getImage().split(",")[1]);
+                    boolean result = newsService.updateNews(newsDTO.getId(),newsDTO.getTitle(),newsDTO.getTextNews(),null);
+                    if (result) {
+                        response.put("message", "Updated added successfully");
+                        response.put("isSuccess", true);
+                        return ResponseEntity.ok(response.toString());
+                    } else {
+                        return ResponseEntity.badRequest().body("Error Updated news");
+                    }
+                }
+
+            } catch (Exception ex) {
+                return ResponseEntity.badRequest().body("Error Updated news");
+            }
         }
     }
 

@@ -39,10 +39,11 @@ public class ProfessorController {
 
         JSONObject response = new JSONObject();
         try {
-                professor.setPassword(aes.encrypt(professor.getPassword()));
+            professor.setPassword(aes.encrypt(professor.getPassword()));
             boolean result = professorService.saveProfessor(professor);
             if (result) {
-                //emailService.sendEmail("pmarin2592@gmail.com","Prueba de sistema", "Prueba de sistema");
+                emailService.sendEmail(professor.getEmail(),"Registro en sistema", "Estimado profesor: \n Le informamos" +
+                        "que su usuario "+professor.getUsername()+"fue creado con la clave "+professor.getPassword()+" por el administrador");
                 response.put("message", "Employee added successfully");
                 response.put("isSuccess", true);
                 return new ResponseEntity<String>(response.toString(), HttpStatus.OK);
@@ -66,7 +67,7 @@ public class ProfessorController {
             professor.setPassword(aes.encrypt(professor.getPassword()));
             boolean result = professorService.updateProfessor(professor);
             if (result) {
-                //emailService.sendEmail("pmarin2592@gmail.com","Prueba de sistema", "Prueba de sistema");
+
                 response.put("message", "Employee added successfully");
                 response.put("isSuccess", true);
                 return new ResponseEntity<String>(response.toString(), HttpStatus.OK);
