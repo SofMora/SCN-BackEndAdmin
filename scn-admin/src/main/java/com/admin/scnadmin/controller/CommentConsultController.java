@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 @CrossOrigin(origins= "*")
 @RestController//change in case you want to test the monolithic app
@@ -34,7 +35,7 @@ public class CommentConsultController {
         }
     }
 
-    @GetMapping("/getgetAllAppointmentCommentDetailById/{id}")
+    @GetMapping("/getAllAppointmentCommentDetailById/{id}")
     public ResponseEntity<CommentConsult> get(@PathVariable Integer id) {
         try {
             CommentConsult commentConsult = commentConsultService.getConsultCommentConsult(id);
@@ -53,7 +54,9 @@ public class CommentConsultController {
             boolean result = commentConsultService.saveCommentConsult(commentConsult);
             if (result) {
                 //emailService.sendEmail("pmarin2592@gmail.com","Prueba de sistema", "Prueba de sistema");
-                return new ResponseEntity<>("Ready", HttpStatus.OK);
+                response.put("message", "comment added successfully");
+                response.put("isSuccess", true);
+                return new ResponseEntity<String>(response.toString(), HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
@@ -84,5 +87,10 @@ public class CommentConsultController {
                     .badRequest()
                     .body("Error delete professor ");
         }
+    }
+
+    @GetMapping("/findCommentConsult")
+    public List<Map<String, Object>> findCommentConsult() {
+        return commentConsultService.findCommentConsult();
     }
 }

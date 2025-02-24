@@ -7,8 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class CourseService {
@@ -47,6 +46,24 @@ public class CourseService {
         {
             return false;
         }
+    }
+
+    public List<Map<String, Object>> getCoursesWithProfessor() {
+        List<Object[]> results = courseRepository.findCoursesByProfessor();
+        List<Map<String, Object>> courses = new ArrayList<>();
+
+        for (Object[] row : results) {
+            Map<String, Object> courseData = new HashMap<>();
+            courseData.put("id", row[0]);
+            courseData.put("name", row[1]);
+            courseData.put("cycle", row[2]);
+            courseData.put("statusCourse", row[3]);
+            courseData.put("description", row[4]);
+            courseData.put("idProfessor", row[5]);
+            courseData.put("nameProfessor", row[6]); // Este es el alias corregido
+            courses.add(courseData);
+        }
+        return courses;
     }
 
 }

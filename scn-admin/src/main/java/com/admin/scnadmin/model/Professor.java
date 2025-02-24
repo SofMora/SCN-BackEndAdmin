@@ -1,5 +1,6 @@
 package com.admin.scnadmin.model;
 
+
 import jakarta.persistence.*;
 
 @Entity
@@ -34,11 +35,9 @@ public class Professor {
     public long getId() {
         return id;
     }
-
     public void setId(long id) {
         this.id = id;
     }
-
     public String getName() {
         return name;
     }
@@ -94,4 +93,6 @@ public class Professor {
     public void setStatusProfessor(boolean statusProfessor) {
         this.statusProfessor = statusProfessor;
     }
+
+
 }

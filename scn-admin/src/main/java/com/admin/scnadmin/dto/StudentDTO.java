@@ -7,5 +7,5 @@ public interface StudentDTO {
     String getLastName();
     String getEmail();
     String getUsername();
-    boolean isStatusStudent();
+    //boolean isStatusStudent();
 }

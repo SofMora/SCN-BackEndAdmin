@@ -26,11 +26,26 @@ public class StudentService {
     }
 
     public Student getStudent(long id) throws SQLException {
-        Optional<Student> optionalStudent = studentRepository.findById(id);
+        Optional<Student> optionalStudent = studentRepository.findById(id).map(student -> {
+            // Si el statusStudent es null, se asigna false
+
+                student.setStatusStudent(false);
+
+            return student;
+        });
+
         if (optionalStudent.isPresent()) {
-            return optionalStudent.get(); // Devuelve el estudiante si lo encuentra
+            // Si el Optional no está vacío, verificamos el valor de statusStudent
+            Student student = optionalStudent.orElseGet(() -> {
+                Student defaultStudent = new Student();
+                defaultStudent.setStatusStudent(false); // Si el student es nulo, setea el statusStudent como false
+                return defaultStudent;
+            });
+
+            return student;
+
         } else {
-            throw new SQLException("Estudiante no encontrado"); // Lanza excepción si no se encuentra el estudiante
+            throw new SQLException("Student not found"); // Lanza excepción si no se encuentra el estudiante
         }
     }
 

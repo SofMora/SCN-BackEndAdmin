@@ -1,6 +1,9 @@
 package com.admin.scnadmin.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "News", schema = "scn_admin")
@@ -20,7 +23,8 @@ public class News {
     private String textNews;
 
     @Column(name = "DateNews")
-    private String dateNews;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX") // ✅ Acepta 'Z' o '+00:00'
+    private LocalDateTime dateNews;
 
     @Column(name= "Images", columnDefinition = "LONGBLOB")
     private byte[] images;
@@ -60,11 +64,11 @@ public class News {
         this.textNews = textNews;
     }
 
-    public String getDateNews() {
+    public LocalDateTime getDateNews() {
         return dateNews;
     }
 
-    public void setDateNews(String dateNews) {
+    public void setDateNews(LocalDateTime dateNews) {
         this.dateNews = dateNews;
     }
 

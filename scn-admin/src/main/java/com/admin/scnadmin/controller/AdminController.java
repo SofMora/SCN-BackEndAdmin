@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 @CrossOrigin(origins= "*")
 @RestController//change in case you want to test the monolithic app
@@ -31,10 +32,10 @@ public class AdminController {
         }
     }
 
-    @GetMapping("/validateUser")
-    public ResponseEntity<Admin> validateUser(
-            @RequestParam String username,
-            @RequestParam String password) throws SQLException {
+    @PostMapping("/validateUser")
+    public ResponseEntity<Admin> validateUser(@RequestBody Map<String, String> credentials) throws Exception {
+        String username = credentials.get("username");
+        String password = credentials.get("password");
         Admin admin = adminService.validateUser(username, password);
         if (admin != null) {
             return new ResponseEntity<>(admin, HttpStatus.OK);

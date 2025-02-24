@@ -1,10 +1,10 @@
 package com.admin.scnadmin.service;
 
 import com.admin.scnadmin.model.Professor;
-import com.admin.scnadmin.model.Student;
 import com.admin.scnadmin.repository.professor.ProfessorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 
 import java.sql.SQLException;
 import java.util.List;
@@ -31,7 +31,7 @@ public class ProfessorService {
 
     public boolean saveProfessor(Professor professor) {
         try{
-            professor.setStatusProfessor(true);
+
             professorRepository.save(professor);
             return true;
         }catch (Exception ex)

@@ -26,7 +26,7 @@ public class Student {
     private String username;
 
     @Column(name= "StatusStudent")
-    private boolean statusStudent;
+    private Boolean statusStudent;
 
     public long getId() {
         return id;

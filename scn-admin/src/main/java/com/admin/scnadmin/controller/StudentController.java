@@ -53,6 +53,7 @@ public class StudentController {
         JSONObject response = new JSONObject();
 
         try {
+
             boolean result = studentService.updateAprovalStudent(studentService.getStudent(id),true);
             if (result) {
                 //emailService.sendEmail("pmarin2592@gmail.com","Prueba de sistema", "Prueba de sistema");
@@ -77,13 +78,13 @@ public class StudentController {
         try {
             boolean result = studentService.updateAprovalStudent(studentService.getStudent(id),false);
             if (result) {
-                //emailService.sendEmail("pmarin2592@gmail.com","Prueba de sistema", "Prueba de sistema");
+                emailService.sendEmail("pmarin2592@gmail.com","Prueba de sistema", "Prueba de sistema");
                 return new ResponseEntity<>("Ready", HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
 
-        } catch (SQLException ex) {
+        } catch (Exception ex) {
             return ResponseEntity
                     .badRequest()
                     .body("Error approval student ");

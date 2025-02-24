@@ -1,7 +1,9 @@
 package com.admin.scnadmin.controller;
 
 import com.admin.scnadmin.model.Professor;
+import com.admin.scnadmin.service.EmailService;
 import com.admin.scnadmin.service.ProfessorService;
+import com.admin.scnadmin.utils.AESUtil;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,7 +20,8 @@ public class ProfessorController {
 
   @Autowired
   private ProfessorService professorService;
-
+  private AESUtil aes = new AESUtil();
+ private EmailService emailService = new EmailService();
     @GetMapping("/getAllProfessor")
     public List<Professor> getAllProfessor() {
         try {
@@ -31,15 +34,18 @@ public class ProfessorController {
     }
 
     @PostMapping("/saveProfessor")
+
     public ResponseEntity<?> saveProfessor(@RequestBody Professor professor) {
 
         JSONObject response = new JSONObject();
-
         try {
+                professor.setPassword(aes.encrypt(professor.getPassword()));
             boolean result = professorService.saveProfessor(professor);
             if (result) {
                 //emailService.sendEmail("pmarin2592@gmail.com","Prueba de sistema", "Prueba de sistema");
-                return new ResponseEntity<>("Ready", HttpStatus.OK);
+                response.put("message", "Employee added successfully");
+                response.put("isSuccess", true);
+                return new ResponseEntity<String>(response.toString(), HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
@@ -57,10 +63,13 @@ public class ProfessorController {
         JSONObject response = new JSONObject();
 
         try {
+            professor.setPassword(aes.encrypt(professor.getPassword()));
             boolean result = professorService.updateProfessor(professor);
             if (result) {
                 //emailService.sendEmail("pmarin2592@gmail.com","Prueba de sistema", "Prueba de sistema");
-                return new ResponseEntity<>("Ready", HttpStatus.OK);
+                response.put("message", "Employee added successfully");
+                response.put("isSuccess", true);
+                return new ResponseEntity<String>(response.toString(), HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
@@ -94,7 +103,7 @@ public class ProfessorController {
     }
 
     @GetMapping("/getProfessorDetailById/{id}")
-    public ResponseEntity<Professor> get(@PathVariable Integer id) {
+    public ResponseEntity<Professor> get(@PathVariable long id) {
         try {
             Professor professor = professorService.getProfessor(id);
             return new ResponseEntity<>(professor, HttpStatus.OK);

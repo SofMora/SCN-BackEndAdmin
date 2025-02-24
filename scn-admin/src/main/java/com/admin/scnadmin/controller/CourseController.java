@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.*;
 
 @CrossOrigin(origins= "*")
 @RestController//change in case you want to test the monolithic app
@@ -33,13 +34,18 @@ public class CourseController {
     @PostMapping("/saveCourse")
     public ResponseEntity<?> saveCourse(@RequestBody Course course) {
 
-        JSONObject response = new JSONObject();
+        //JSONObject response = new JSONObject();
+        Map<String, Object> response = new HashMap<>();
+
 
         try {
             boolean result = courseService.saveCourse(course);
             if (result) {
                 //emailService.sendEmail("pmarin2592@gmail.com","Prueba de sistema", "Prueba de sistema");
-                return new ResponseEntity<>("Ready", HttpStatus.OK);
+                response.put("message", "Course added successfully");
+                response.put("isSuccess", true);
+                return new ResponseEntity<String>(response.toString(), HttpStatus.OK);
+
             } else {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
@@ -47,13 +53,14 @@ public class CourseController {
         } catch (Exception ex) {
             return ResponseEntity
                     .badRequest()
-                    .body("Error save professor ");
+                   .body("Error save professor ");
+
         }
     }
 
 
     @PostMapping("/deleteCourseById/{id}")
-    public ResponseEntity<?> deleteProfessorById(@PathVariable(value = "id") long id) {
+    public ResponseEntity<?> deleteCourseById(@PathVariable(value = "id") long id) {
 
         JSONObject response = new JSONObject();
 
@@ -69,7 +76,7 @@ public class CourseController {
         } catch (Exception ex) {
             return ResponseEntity
                     .badRequest()
-                    .body("Error delete professor ");
+                    .body("Error deleted course");
         }
     }
 
@@ -81,5 +88,10 @@ public class CourseController {
         } catch (SQLException ex) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+    }
+
+    @GetMapping("/getwithprofessor")
+    public List<Map<String, Object>> getCoursesWithProfessor() {
+        return courseService.getCoursesWithProfessor();
     }
 }

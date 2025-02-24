@@ -8,8 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class CommentConsultService {
@@ -50,5 +49,25 @@ public class CommentConsultService {
         {
             return false;
         }
+    }
+
+    public List<Map<String, Object>> findCommentConsult() {
+        List<Object[]> results = commentConsultRepository.findCommentConsult();
+        List<Map<String, Object>> courses = new ArrayList<>();
+
+        for (Object[] row : results) {
+            Map<String, Object> courseData = new HashMap<>();
+            courseData.put("Id", row[0]);
+            courseData.put("DescriptionConsult", row[1]);
+            courseData.put("DesTypeConsult", row[2]);
+            courseData.put("TypeConsult", row[3]);
+            courseData.put("DateConsult", row[4]);
+            courseData.put("nameCourse", row[5]);
+            courseData.put("courseId", row[6]);
+            courseData.put("Student", row[7]);
+            courseData.put("studenId", row[8]);
+            courses.add(courseData);
+        }
+        return courses;
     }
 }
