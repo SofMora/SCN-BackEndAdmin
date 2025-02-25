@@ -11,21 +11,21 @@ pool:
 
 steps:
 - task: DotNetCoreCLI@2
-  displaName: "Compilación"
+  displayName: "Compilación"
   inputs:
     command: 'build'
     projects: '**/*.csproj'
     workingDirectory: '$(System.DefaultWorkingDirectory)/scn-admin'
 
 - task: DotNetCoreCLI@2
-  displaName: "Publicación"
+  displayName: "Publicación"
   inputs:
     command: 'publish'
     publishWebProjects: true
     workingDirectory: '$(System.DefaultWorkingDirectory)/scn-admin'
 
 - task: AzureRmWebAppDeployment@5
-  displaName: "Despliegue"
+  displayName: "Despliegue"
   inputs:
     ConnectionType: 'AzureRM'
     azureSubscription: 'Azure for Students(e9d441bf-2a34-4287-baeb-4dfb620bb04d)'
