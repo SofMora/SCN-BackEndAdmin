@@ -1,20 +1,15 @@
 package com.admin.scnadmin.model;
-
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "Student", schema = "scn_student")
-public class Student {
-
+@Table(name = "Admin", schema = "scn_admin")
+public class Admin {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @Column(name= "Name")
     private String name;
-
-    @Column(name= "LastName")
-    private String lastName;
 
     @Column(name= "Email")
     private String email;
@@ -25,8 +20,8 @@ public class Student {
     @Column(name= "Username")
     private String username;
 
-    @Column(name= "StatusStudent")
-    private Boolean statusStudent;
+    @Column(name= "Status")
+    private Boolean status;
 
     public long getId() {
         return id;
@@ -42,14 +37,6 @@ public class Student {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
     }
 
     public String getEmail() {
@@ -76,11 +63,11 @@ public class Student {
         this.username = username;
     }
 
-    public boolean isStatusStudent() {
-        return statusStudent;
+    public Boolean getStatus() {
+        return status;
     }
 
-    public void setStatusStudent(boolean statusStudent) {
-        this.statusStudent = statusStudent;
+    public void setStatus(Boolean status) {
+        this.status = status;
     }
 }
