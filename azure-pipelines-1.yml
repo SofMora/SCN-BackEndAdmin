@@ -1,0 +1,26 @@
+pool:
+ name: scn_admin_agent_poll
+
+steps:
+- task: DotNetCoreCLI@2
+  displayName: "Compilación"
+  inputs:
+    command: 'build'
+    projects: '**/*.csproj'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/scn-admin'
+
+- task: DotNetCoreCLI@2
+  displayName: "Publicación"
+  inputs:
+    command: 'publish'
+    publishWebProjects: true
+    workingDirectory: '$(System.DefaultWorkingDirectory)/scn-admin'
+
+- task: AzureRmWebAppDeployment@5
+  displayName: "Despliegue"
+  inputs:
+    ConnectionType: 'AzureRM'
+    azureSubscription: 'Azure for Students(e9d441bf-2a34-4287-baeb-4dfb620bb04d)'
+    appType: 'webApp'
+    WebAppName: 'ScnAdmin'
+    packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
